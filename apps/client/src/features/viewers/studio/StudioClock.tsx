@@ -19,6 +19,7 @@ import './StudioClock.scss';
 interface StudioClockProps {
   backstageEvents: OntimeRundown;
   eventNext: OntimeEvent | null;
+  eventNow: OntimeEvent | null;
   general: ProjectData;
   isMirrored: boolean;
   time: ViewExtendedTimer;
@@ -29,7 +30,7 @@ interface StudioClockProps {
 }
 
 export default function StudioClock(props: StudioClockProps) {
-  const { backstageEvents, eventNext, general, isMirrored, time, selectedId, nextId, onAir, settings } = props;
+  const { backstageEvents, eventNext, eventNow, general, isMirrored, time, selectedId, nextId, onAir, settings } = props;
 
   const [searchParams] = useSearchParams();
 
@@ -56,6 +57,7 @@ export default function StudioClock(props: StudioClockProps) {
   const studioClockOptions = getStudioClockOptions(defaultFormat);
 
   const hideRight = isStringBoolean(searchParams.get('hideRight'));
+  const showNow = isStringBoolean(searchParams.get('showNow'));
   let timer = millisToString(time.current, { fallback: '---' });
   const hideSeconds = isStringBoolean(searchParams.get('hideTimerSeconds'));
   if (time.current != null && hideSeconds) {
@@ -72,7 +74,8 @@ export default function StudioClock(props: StudioClockProps) {
       <div className='clock-container'>
         {hasAmPm && <div className='clock__ampm'>{hasAmPm}</div>}
         <div className={`studio-timer ${!hideSeconds ? 'studio-timer--with-seconds' : ''}`}>{clock}</div>
-        <FitText className='next-title'>{eventNext?.title}</FitText>
+        <FitText className={`next-title ${!showNow ? '' : 'show-now'}`}>{eventNext?.title}</FitText>
+        <FitText className={`current-title ${showNow ? '' : 'show-now'}`}>{eventNow?.title}</FitText>
         <div
           className={`
             next-countdown ${isNegative ? ' next-countdown--overtime' : ''} ${isPaused ? ' next-countdown--paused' : ''}
@@ -80,6 +83,7 @@ export default function StudioClock(props: StudioClockProps) {
         >
           {timer}
         </div>
+        <FitText className={`next-title ${showNow ? '' : 'show-now'}`}>{eventNext?.title}</FitText>
         <div className='clock-indicators'>
           {activeIndicators.map((i) => (
             <div
