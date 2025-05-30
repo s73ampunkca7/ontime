@@ -4,6 +4,19 @@ import type { ViewOption } from '../../../common/components/view-params-editor/t
 export const getStudioClockOptions = (timeFormat: string): ViewOption[] => [
   { title: OptionTitle.ClockOptions, collapsible: true, options: [getTimeOption(timeFormat)] },
   { title: OptionTitle.TimerOptions, collapsible: true, options: [hideTimerSeconds] },
+  { 
+    title: OptionTitle.ElementVisibility, 
+    collapsible: true, 
+    options: [
+      {
+        id: 'showNow',
+        title: 'Show Current Event in Clock',
+        description: 'Show the current event in the Clock instead of the next',
+        type: 'boolean',
+        defaultValue: false,
+      },
+    ],
+  },
   {
     title: OptionTitle.ElementVisibility,
     collapsible: true,
